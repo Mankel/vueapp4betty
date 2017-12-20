@@ -1,53 +1,62 @@
 <template>
-    <div class="hello">
-        <h1>{{ msg }}</h1>
-        <h2>Essential Links</h2>
-        <ul>
-            <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
-            <li><a href="https://forum.vuejs.org" target="_blank">Forum</a></li>
-            <li><a href="https://chat.vuejs.org" target="_blank">Community Chat</a></li>
-            <li><a href="https://twitter.com/vuejs" target="_blank">Twitter</a></li>
-            <br>
-            <li><a href="http://vuejs-templates.github.io/webpack/" target="_blank">Docs for This Template</a></li>
-        </ul>
-        <h2>Ecosystem</h2>
-        <ul>
-            <li><a href="http://router.vuejs.org/" target="_blank">vue-router</a></li>
-            <li><a href="http://vuex.vuejs.org/" target="_blank">vuex</a></li>
-            <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
-            <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
-        </ul>
+    <div ref="ref">
+        <div>
+            <span ref="aa"><input v-model="formData.a" /></span>
+            <span ref="bb"><input v-model.number="formData.b" /></span>
+            <span ref="cc"><input v-model="formData.c" /></span>
+            <button @click="submit">验证</button>
+            <div>是否通过验证：{{validMessage}}</div>
+        </div>
     </div>
 </template>
 
 <script>
+    import Validation from './Validation';
+
     export default {
         name: 'HelloWorld',
+        extends: Validation,
         data() {
             return {
-                msg: 'Welcome to Your Vue.js App'
+                msg: 'Welcome to Your Vue.js App',
+                formData: {
+                    a: 1,
+                    b: 2,
+                    c: 'test',
+                },
+                rules: {
+                    aa: true,
+                    bb: _ => {
+                        return this.formData.b === 3;
+                    },
+                    cc: _ => {
+                        return this.formData.c === 'test';
+                    }
+                },
+                validMessage: null
             };
+        },
+        mounted () {
+            console.log(this.$refs.ref);
+//            this.$refs.ref.className = 'is-error';
+        },
+        methods: {
+            submit () {
+                let valid = this.validate(this.rules);
+                this.isValid = valid;
+                if (!valid) {
+                    this.validMessage = '有错误';
+                } else {
+
+                    this.validMessage = null;
+                }
+            }
         }
     };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-    h1, h2 {
-        font-weight: normal;
-    }
-
-    ul {
-        list-style-type: none;
-        padding: 0;
-    }
-
-    li {
-        display: inline-block;
-        margin: 0 10px;
-    }
-
-    a {
-        color: #42b983;
-    }
+    span { border: 1px solid gray; padding: 2px;}
+    .is-error {border: 2px solid red;}
 </style>
