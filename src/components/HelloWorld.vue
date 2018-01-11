@@ -12,6 +12,7 @@
 
 <script>
     import Validation from './Validation';
+    import {service} from '../utils/service';
 
     export default {
         name: 'HelloWorld',
@@ -39,6 +40,7 @@
         mounted () {
             console.log(this.$refs.ref);
 //            this.$refs.ref.className = 'is-error';
+            this.doAjax();
         },
         methods: {
             submit () {
@@ -50,6 +52,15 @@
 
                     this.validMessage = null;
                 }
+            },
+            doAjax () {
+                service({
+                    method: 'get',
+                    url: '/proxy/api/index/ajax_get_ad_lists',
+                    params: {}
+                }).then(response => {
+                    console.log(response.data);
+                });
             }
         }
     };
